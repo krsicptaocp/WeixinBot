@@ -6,7 +6,7 @@ import cookielib
 import requests
 import xml.dom.minidom
 import json
-import time, re, sys, os, random
+import time, re, sys, os, random, subprocess
 import multiprocessing
 import platform
 from collections import defaultdict
@@ -118,7 +118,11 @@ class WebWeixin(object):
 		with open(QRCODE_PATH, 'wb') as f:
 			f.write(data)
 
-		os.startfile(QRCODE_PATH)
+		if sys.platform.startswith('win'):
+			os.startfile(QRCODE_PATH)
+		else:
+			tmp = 'open' if sys.platform == 'darwin' else 'xdg-open'
+			subprocess.call([tmp, QRCODE_PATH])
 
 	def waitForLogin(self, tip = 1):
 		time.sleep(tip)
